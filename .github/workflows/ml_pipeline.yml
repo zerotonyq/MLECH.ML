@@ -1,0 +1,23 @@
+name: ML Pipeline
+
+on:
+  push:
+    branches:
+      - main
+      - dev  # Добавляем ветку dev
+  pull_request:
+    branches:
+      - main
+      - dev
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2  # Загружает репозиторий
+
+      - name: Set up Python
+        uses: actions/setup-python@v2  # Устанавливает Python
+        with:
+          python-version: '3.8'
