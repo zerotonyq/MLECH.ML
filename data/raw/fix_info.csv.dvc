@@ -1,0 +1,5 @@
+outs:
+- md5: 5e67891e17909e561d863c6a8b037665
+  size: 6568688
+  hash: md5
+  path: fix_info.csv
