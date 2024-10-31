@@ -20,4 +20,4 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v2  # Устанавливает Python
         with:
-          python-version: '3.8'
+          python-version: '3.9'

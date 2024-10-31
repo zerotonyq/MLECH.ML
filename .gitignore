@@ -162,3 +162,7 @@ data/**/*.txt
 .idea/**/usage.statistics.xml
 .idea/**/dictionaries
 .idea/**/shelf
+
+.ipynb_checkpoints
+catboost*
+mlruns
