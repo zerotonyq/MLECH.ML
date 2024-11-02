@@ -1,0 +1,4 @@
+outs:
+- md5: 53b6638b27f57f2e6febd9be72b6e3b6
+  size: 140732
+  path: model_test.csv
