@@ -22,8 +22,8 @@ X_train, X_test, y_train, y_test = train_test_split(
 categorical_features = X.select_dtypes(include=['object', 'category']).columns.tolist()
 
 param_grid = {
-    'iterations': [150],
-    'depth': [2],
+    'iterations': [100, 150],
+    'depth': [2, 3],
     'learning_rate': [0.01],
     'l2_leaf_reg': [1, 3],
     'border_count': [64]
