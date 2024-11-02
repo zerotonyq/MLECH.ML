@@ -27,7 +27,9 @@ jobs:
           pip install -r requirements.txt
 
       - name: Pull data from DVC
-        run: dvc pull data/processed/test.csv.dvc
+        run: |
+          dvc pull data/processed/test.csv.dvc
+          dvc pull models/model.cbm.dvc
         env:
           AWS_ACCESS_KEY_ID: dijwUT89Pd33o8DSRT4oFB
           AWS_SECRET_ACCESS_KEY: 46tY1bDm3TuX5UibGDbDUiuLN6orNdGnMqJBHCj5KSex
