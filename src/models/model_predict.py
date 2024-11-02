@@ -32,6 +32,12 @@ def main():
     model = load_model(args.model_path)
     data = pd.read_csv(args.data_path)
 
+    if 'target_class' in data.columns:
+        data.drop(['target_class'], axis=1, inplace=True)
+
+    if 'target_reg' in data.columns:
+        data.drop(['target_reg'], axis=1, inplace=True)
+
     if args.probabilities:
         prediction = pred_proba(model, data)
     else:

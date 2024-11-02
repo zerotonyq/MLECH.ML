@@ -1,4 +1,4 @@
 outs:
-- md5: 392d2ee8a6bb03ddaee8685ce5c19430
-  size: 187724
+- md5: d5c0328ec3dba2bb36c3eb8199fd9984
+  size: 47093
   path: car_train.csv
