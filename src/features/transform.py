@@ -1,7 +1,8 @@
 from DataTransform import DataTransform
 import pandas as pd
 
-SAVE_PATH = '../../data/features/prepared_train.csv'
+SAVE_PATH_TRAIN = '../../data/features/prepared_train.csv'
+SAVE_PATH_TEST = '../../data/features/prepared_test.csv'
 DATA_PATH = '../../data/raw/'
 GROUPBY_COLUMN = ['car_id']
 
@@ -42,6 +43,7 @@ rides_info_aggregation = {
     'distance': ['mean', 'median', 'sum'],
     'refueling': ['sum'],
 }
+
 rides_info_transformer = DataTransform(rides_info,
                                        group_cols=GROUPBY_COLUMN,
                                        aggregate_functions=rides_info_aggregation)
@@ -53,4 +55,8 @@ transformed_rides_info = rides_info_transformer.transform(rides_info_cols)
 features = car_train.merge(transformed_fix_info, how='left', on='car_id')
 features = features.merge(transformed_rides_info, how='left', on='car_id')
 
-features.to_csv(SAVE_PATH, index=False, encoding='utf-8', header=True)
+features.to_csv(SAVE_PATH_TRAIN, index=False, encoding='utf-8', header=True)
+
+features_test = car_test.merge(transformed_fix_info, how='left', on='car_id')
+features_test = features_test.merge(transformed_rides_info, how='left', on='car_id')
+features_test.to_csv(SAVE_PATH_TEST, index=False, encoding='utf-8', header=True)

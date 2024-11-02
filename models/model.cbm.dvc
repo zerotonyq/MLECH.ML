@@ -1,0 +1,4 @@
+outs:
+- md5: 63ebdc914fadc3f3417cfca55a1e8b8e
+  size: 111228
+  path: model.cbm
