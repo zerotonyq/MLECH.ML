@@ -31,8 +31,8 @@ jobs:
           dvc pull data/processed/test.csv.dvc
           dvc pull models/model.cbm.dvc
         env:
-          AWS_ACCESS_KEY_ID: dijwUT89Pd33o8DSRT4oFB
-          AWS_SECRET_ACCESS_KEY: 46tY1bDm3TuX5UibGDbDUiuLN6orNdGnMqJBHCj5KSex
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
       - name: Predict model
         run: python src/models/model_predict.py -m models/model.cbm -d data/processed/test.csv -o data/processed/predictions.csv
