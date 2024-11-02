@@ -24,7 +24,7 @@ def test_model(pred_path, real_path):
     assert accuracy >= ACCURACY_THRESHOLD, f"Accuracy {accuracy} ниже порога {ACCURACY_THRESHOLD}"
     assert f1_macro >= F1_THRESHOLD, f"F1 {f1_macro} ниже порога {F1_THRESHOLD}"
 
-    print("Модель прошла тесты!")
+    print("Tests passed!")
     print(f"Accuracy: {accuracy}")
     print(f"F1: {f1_macro}")
 
