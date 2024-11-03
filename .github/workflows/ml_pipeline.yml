@@ -21,21 +21,9 @@ jobs:
         with:
           python-version: '3.9'
 
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
-
-      - name: Pull data from DVC
-        run: |
-          dvc pull data/processed/test.csv.dvc
-          dvc pull models/model.cbm.dvc
+      - name: Build project
+        run:
+          make all
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-
-      - name: Predict model
-        run: python src/models/model_predict.py -m models/model.cbm -d data/processed/test.csv -o data/processed/predictions.csv
-
-      - name: Test model
-        run: python src/tests/test_model.py -p data/processed/predictions.csv -t data/processed/test.csv
