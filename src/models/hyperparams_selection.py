@@ -51,8 +51,7 @@ def hyperparams_selection(features_train: pd.DataFrame,
         custom_metric='Recall',
         verbose=0,
         random_seed=42,
-        train_dir=None,
-        used_ram_limit=1024 * 1024 * 512
+        train_dir=None
     )
 
     grid_search = GridSearchCV(
