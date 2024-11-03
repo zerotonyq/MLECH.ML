@@ -12,7 +12,7 @@ def parse_args():
     parser.add_argument('--not_save_model_test', action='store_true', default=False, help='is save data for testing model')
     parser.add_argument('--out_train', type=str, required=False, default='data/features/prepared_train.csv', help='path for save train data')
     parser.add_argument('--out_test', type=str, required=False, default='data/features/prepared_test.csv', help='path for save test data')
-    parser.add_argument('--out_model_test', type=str, required=False, default='data/processed/test.csv', help='path for save model test data')
+    parser.add_argument('--out_model_test', type=str, required=False, default='data/processed/prepared_model_test.csv', help='path for save model test data')
 
     return parser.parse_args()
 
@@ -76,18 +76,20 @@ def main():
     if not args.not_save_test:
         features = car_train.merge(transformed_fix_info, how='left', on='car_id')
         features = features.merge(transformed_rides_info, how='left', on='car_id')
+        features.drop(['car_id'], axis=1, inplace=True)
         features.to_csv(args.out_train, index=False, encoding='utf-8', header=True)
 
     if not args.not_save_train:
         features_test = car_test.merge(transformed_fix_info, how='left', on='car_id')
         features_test = features_test.merge(transformed_rides_info, how='left', on='car_id')
+        features_test.drop(['car_id'], axis=1, inplace=True)
         features_test.to_csv(args.out_test, index=False, encoding='utf-8', header=True)
 
     if not args.not_save_model_test:
         features_model_test = model_test.merge(transformed_fix_info, how='left', on='car_id')
         features_model_test = features_model_test.merge(transformed_rides_info, how='left', on='car_id')
+        features_model_test.drop(['car_id'], axis=1, inplace=True)
         features_model_test.to_csv(args.out_model_test, index=False, encoding='utf-8', header=True)
-
 
 if __name__ == '__main__':
     main()

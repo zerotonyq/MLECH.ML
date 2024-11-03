@@ -18,7 +18,7 @@ pull-data:
 
 transform-data: pull-data
 	echo "Data transforming started!"
-	$(PYTHON) src/features/transform.py --model_test $(PATH_TO_TEST_MODEL_DATA) --raw_data data/raw/ --not_save_model_test
+	$(PYTHON) src/features/transform.py --model_test $(PATH_TO_TEST_MODEL_DATA) --raw_data data/raw/
 	echo "Data transformed!"
 
 select-params: $(TRAIN_DATA)
@@ -33,8 +33,8 @@ train-model: $(TRAIN_DATA) $(MODEL_PARAMS)
 	echo "Model fitted!"
 
 
-test-model: $(PATH_TO_MODEL) $(PATH_TO_TEST_MODEL_DATA)
-	$(PYTHON) src/models/model_predict.py -m $(PATH_TO_MODEL) -d $(PATH_TO_TEST_MODEL_DATA) -o data/processed/predictions.csv
+test-model: $(PATH_TO_MODEL)
+	$(PYTHON) src/models/model_predict.py -m $(PATH_TO_MODEL) -d data/processed/prepared_model_test.csv -o data/processed/predictions.csv
 	$(PYTHON) src/tests/test_model.py -p data/processed/predictions.csv -t data/processed/test.csv
 
 
