@@ -5,7 +5,8 @@ import logging
 import pandas as pd
 from catboost import CatBoostClassifier
 from sklearn.metrics import accuracy_score, roc_auc_score, f1_score, recall_score
-from sklearn.model_selection import train_test_split, GridSearchCV
+from sklearn.model_selection import train_test_split
+import Optuna
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Hyperparameters selection")
@@ -41,36 +42,67 @@ def hyperparams_selection(features_train: pd.DataFrame,
                           features_test: pd.DataFrame,
                           target_train: pd.DataFrame,
                           target_test: pd.DataFrame,
-                          param_grid: Dict) -> tuple[Any, Any]:
+                          param_grid: Dict) -> Tuple[Any, Any]:
 
     categorical_features = features_train.select_dtypes(include=['object', 'category']).columns.tolist()
 
-    cat_model = CatBoostClassifier(
+    def objective(trial):
+        params = {
+            'iterations': trial.suggest_int('iterations', param_grid['iterations'][0], param_grid['iterations'][1]),
+            'depth': trial.suggest_int('depth', param_grid['depth'][0], param_grid['depth'][1]),
+            'learning_rate': trial.suggest_float('learning_rate', param_grid['learning_rate'][0],
+                                                 param_grid['learning_rate'][1], log=True),
+            'l2_leaf_reg': trial.suggest_float('l2_leaf_reg', param_grid['l2_leaf_reg'][0],
+                                               param_grid['l2_leaf_reg'][1], log=True),
+            'border_count': trial.suggest_int('border_count', param_grid['border_count'][0],
+                                              param_grid['border_count'][1]),
+            'random_seed': 42
+        }
+
+        model = CatBoostClassifier(
+            loss_function='MultiClass',
+            eval_metric='MultiClass',
+            custom_metric='Recall',
+            verbose=0,
+            train_dir=None,
+            **params
+        )
+
+        model.fit(
+            features_train, target_train,
+            cat_features=categorical_features,
+            eval_set=(features_test, target_test),
+            verbose=0
+        )
+
+        preds = model.predict(features_test)
+        recall = recall_score(target_test, preds, average='macro')
+
+        return recall
+
+    study = optuna.create_study(direction='maximize')
+    study.optimize(objective, n_trials=50, n_jobs=-1)
+
+    best_params = study.best_params
+    best_params['random_seed'] = 42
+
+    best_model = CatBoostClassifier(
         loss_function='MultiClass',
         eval_metric='MultiClass',
         custom_metric='Recall',
         verbose=0,
-        random_seed=42,
-        train_dir=None
+        train_dir=None,
+        **best_params
     )
 
-    grid_search = GridSearchCV(
-        estimator=cat_model,
-        param_grid=param_grid,
-        scoring='recall_macro',
-        cv=3,
-        verbose=1,
-        n_jobs=-1
-    )
-
-    grid_search.fit(
+    best_model.fit(
         features_train, target_train,
         cat_features=categorical_features,
         eval_set=(features_test, target_test),
-        verbose=0,
+        verbose=0
     )
 
-    return grid_search.best_params_, grid_search.best_estimator_
+    return best_params, best_model
 
 
 def save_params(path: str, params: Dict):
